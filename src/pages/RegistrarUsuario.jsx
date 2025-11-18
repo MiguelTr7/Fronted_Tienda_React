@@ -41,7 +41,8 @@ function RegistrarUsuario() {
 
     try {
       // ✅ Llamada al backend desplegado en Render
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+     const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/register", {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -165,3 +166,4 @@ function RegistrarUsuario() {
 }
 
 export default RegistrarUsuario;
+
