@@ -1,0 +1,174 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/registro.css";
+
+function RegistrarUsuario() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+    password: "",
+    direccion: ""
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const validarEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Validaciones del lado del cliente (mantenidas)
+    if (!validarEmail(formData.email)) {
+      setError("Por favor ingresa un correo electrónico válido");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
+    try {
+      // 🔗 LLAMADA AL BACKEND EN RENDER
+      const response = await fetch("https://backend-tienda-react.onrender.com/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // El backend devuelve { message: "..." }
+        setError(data.message || "Error al registrar el usuario");
+        return;
+      }
+
+      // ✅ Registro exitoso: redirigir al login
+      alert("¡Cuenta creada con éxito!");
+      navigate("/iniciar-sesion");
+
+    } catch (err) {
+      setError("Error de conexión con el servidor");
+      console.error("Error en registro:", err);
+    }
+  };
+
+  return (
+    <main className="registro-main">
+      <div className="registro-wrapper">
+        <div className="registro-card">
+          <div className="logo">
+            <span className="icon">🧰</span>
+            <h1>Ferretería React</h1>
+          </div>
+
+          <h2>Crear cuenta</h2>
+          <p className="sub">
+            Crea tu cuenta para acceder a tus compras y promociones exclusivas.
+          </p>
+
+          {error && (
+            <div className="alerta-error">
+              <span>⚠️</span> {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label htmlFor="nombre">Nombre</label>
+              <input 
+                id="nombre"
+                type="text" 
+                name="nombre"
+                placeholder="Tu nombre" 
+                value={formData.nombre}
+                onChange={handleChange}
+                required 
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="apellido">Apellido</label>
+              <input 
+                id="apellido"
+                type="text" 
+                name="apellido"
+                placeholder="Tu apellido" 
+                value={formData.apellido}
+                onChange={handleChange}
+                required 
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="email">Correo electrónico</label>
+              <input 
+                id="email"
+                type="email" 
+                name="email"
+                placeholder="correo@ejemplo.com" 
+                value={formData.email}
+                onChange={handleChange}
+                required 
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="password">Contraseña</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="direccion">Dirección</label>
+              <input
+                id="direccion"
+                type="text"
+                name="direccion"
+                placeholder="Calle, número, comuna..."
+                value={formData.direccion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn-registrar">
+              Crear cuenta
+            </button>
+          </form>
+
+          <div className="login-link">
+            ¿Ya tienes cuenta?{" "}
+            <a href="/iniciar-sesion">Inicia sesión aquí</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default RegistrarUsuario;
