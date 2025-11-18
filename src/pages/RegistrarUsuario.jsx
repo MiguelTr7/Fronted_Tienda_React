@@ -28,7 +28,6 @@ function RegistrarUsuario() {
     e.preventDefault();
     setError("");
 
-    // Validaciones del lado del cliente
     if (!validarEmail(formData.email)) {
       setError("Por favor ingresa un correo electrónico válido");
       return;
@@ -40,9 +39,7 @@ function RegistrarUsuario() {
     }
 
     try {
-      // ✅ Llamada al backend desplegado en Render
-     const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/register", {
-
+      const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -74,9 +71,7 @@ function RegistrarUsuario() {
           </div>
 
           <h2>Crear cuenta</h2>
-          <p className="sub">
-            Crea tu cuenta para acceder a tus compras y promociones exclusivas.
-          </p>
+          <p className="sub">Crea tu cuenta para acceder a tus compras y promociones exclusivas.</p>
 
           {error && (
             <div className="alerta-error">
@@ -87,77 +82,29 @@ function RegistrarUsuario() {
           <form onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="nombre">Nombre</label>
-              <input
-                id="nombre"
-                type="text"
-                name="nombre"
-                placeholder="Tu nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="nombre" required value={formData.nombre} onChange={handleChange} />
             </div>
-
             <div className="input-group">
               <label htmlFor="apellido">Apellido</label>
-              <input
-                id="apellido"
-                type="text"
-                name="apellido"
-                placeholder="Tu apellido"
-                value={formData.apellido}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="apellido" required value={formData.apellido} onChange={handleChange} />
             </div>
-
             <div className="input-group">
               <label htmlFor="email">Correo electrónico</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="correo@ejemplo.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+              <input type="email" name="email" required value={formData.email} onChange={handleChange} />
             </div>
-
             <div className="input-group">
               <label htmlFor="password">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+              <input type="password" name="password" required value={formData.password} onChange={handleChange} />
             </div>
-
             <div className="input-group">
               <label htmlFor="direccion">Dirección</label>
-              <input
-                id="direccion"
-                type="text"
-                name="direccion"
-                placeholder="Calle, número, comuna..."
-                value={formData.direccion}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="direccion" required value={formData.direccion} onChange={handleChange} />
             </div>
-
-            <button type="submit" className="btn-registrar">
-              Crear cuenta
-            </button>
+            <button type="submit" className="btn-registrar">Crear cuenta</button>
           </form>
 
           <div className="login-link">
-            ¿Ya tienes cuenta?{" "}
-            <a href="/iniciar-sesion">Inicia sesión aquí</a>
+            ¿Ya tienes cuenta? <a href="/iniciar-sesion">Inicia sesión aquí</a>
           </div>
         </div>
       </div>
@@ -166,4 +113,3 @@ function RegistrarUsuario() {
 }
 
 export default RegistrarUsuario;
-
