@@ -24,9 +24,7 @@ function IniciarSesion() {
     setError("");
 
     try {
-      // ✅ Usamos la URL del backend configurada en .env
-     const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/login", {
-
+      const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -41,22 +39,21 @@ function IniciarSesion() {
         return;
       }
 
-      // ⚠️ Asegúrate que el backend devuelva estos campos (token, roles, etc.)
       const userData = {
-        email: formData.email,
-        token: data.token,
-        roles: data.roles
+        email: data.email,
+        nombre: data.nombre,
+        rol: data.rol.toLowerCase()
       };
 
-      localStorage.setItem("usuarioActivo", JSON.stringify(userData));
-      localStorage.setItem("token", data.token);
-
-      // Redirige según el rol
-      if (data.roles.includes("ROLE_ADMIN")) {
+      if (data.rol === "ADMIN") {
+        localStorage.setItem("adminActivo", JSON.stringify(userData));
         navigate("/admin");
       } else {
+        localStorage.setItem("usuarioActivo", JSON.stringify(userData));
         navigate("/productos");
       }
+
+      localStorage.setItem("token", data.token);
 
     } catch (err) {
       setError("Error de conexión con el servidor");
@@ -117,8 +114,7 @@ function IniciarSesion() {
           </form>
 
           <div className="registro-link">
-            ¿No tienes cuenta?{" "}
-            <a href="/registrar-usuario">Regístrate aquí</a>
+            ¿No tienes cuenta? <a href="/registrar-usuario">Regístrate aquí</a>
           </div>
         </div>
       </div>
@@ -127,4 +123,3 @@ function IniciarSesion() {
 }
 
 export default IniciarSesion;
-
