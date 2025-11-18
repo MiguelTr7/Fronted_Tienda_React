@@ -4,7 +4,7 @@ import "../styles/registro.css";
 
 function RegistrarUsuario() {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -12,7 +12,7 @@ function RegistrarUsuario() {
     password: "",
     direccion: ""
   });
-  
+
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -22,15 +22,13 @@ function RegistrarUsuario() {
     });
   };
 
-  const validarEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+  const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    // Validaciones del lado del cliente
     if (!validarEmail(formData.email)) {
       setError("Por favor ingresa un correo electrónico válido");
       return;
@@ -41,16 +39,28 @@ function RegistrarUsuario() {
       return;
     }
 
-    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const emailExiste = usuarios.some(user => user.email === formData.email);
-    if (emailExiste) {
-      setError("Este correo ya está registrado");
-      return;
-    }
+    try {
+      // ✅ Llamada al backend desplegado en Render
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
 
-    usuarios.push(formData);
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-    navigate("/iniciar-sesion");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Error al registrar el usuario");
+        return;
+      }
+
+      alert("¡Cuenta creada con éxito!");
+      navigate("/iniciar-sesion");
+
+    } catch (err) {
+      setError("Error de conexión con el servidor");
+      console.error("Error en registro:", err);
+    }
   };
 
   return (
@@ -61,7 +71,7 @@ function RegistrarUsuario() {
             <span className="icon">🧰</span>
             <h1>Ferretería React</h1>
           </div>
-          
+
           <h2>Crear cuenta</h2>
           <p className="sub">
             Crea tu cuenta para acceder a tus compras y promociones exclusivas.
@@ -76,40 +86,40 @@ function RegistrarUsuario() {
           <form onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="nombre">Nombre</label>
-              <input 
+              <input
                 id="nombre"
-                type="text" 
+                type="text"
                 name="nombre"
-                placeholder="Tu nombre" 
+                placeholder="Tu nombre"
                 value={formData.nombre}
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
 
             <div className="input-group">
               <label htmlFor="apellido">Apellido</label>
-              <input 
+              <input
                 id="apellido"
-                type="text" 
+                type="text"
                 name="apellido"
-                placeholder="Tu apellido" 
+                placeholder="Tu apellido"
                 value={formData.apellido}
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
 
             <div className="input-group">
               <label htmlFor="email">Correo electrónico</label>
-              <input 
+              <input
                 id="email"
-                type="email" 
+                type="email"
                 name="email"
-                placeholder="correo@ejemplo.com" 
+                placeholder="correo@ejemplo.com"
                 value={formData.email}
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
 

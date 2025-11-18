@@ -24,43 +24,38 @@ function IniciarSesion() {
     setError("");
 
     try {
-      // 🔗 LLAMADA AL BACKEND EN RENDER
-      const response = await fetch("https://tu-backend.onrender.com/auth/login", {
+      // ✅ Usamos la URL del backend configurada en .env
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
+        body: JSON.stringify(formData)
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data || "Correo o contraseña incorrectos");
+        setError(data.message || "Correo o contraseña incorrectos");
         return;
       }
 
-      // ✅ Formato exacto que usabas antes en localStorage
+      // ⚠️ Asegúrate que el backend devuelva estos campos (token, roles, etc.)
       const userData = {
-        email: data.email,
-        nombre: data.nombre,
-        rol: data.rol.toLowerCase() // "admin" o "user"
+        email: formData.email,
+        token: data.token,
+        roles: data.roles
       };
 
-      // Guardar en localStorage según el rol
-      if (data.rol === "ADMIN") {
-        localStorage.setItem("adminActivo", JSON.stringify(userData));
+      localStorage.setItem("usuarioActivo", JSON.stringify(userData));
+      localStorage.setItem("token", data.token);
+
+      // Redirige según el rol
+      if (data.roles.includes("ROLE_ADMIN")) {
         navigate("/admin");
       } else {
-        localStorage.setItem("usuarioActivo", JSON.stringify(userData));
         navigate("/productos");
       }
-
-      // ⚠️ Guardamos el token JWT para futuras peticiones (ej: CRUD en admin)
-      localStorage.setItem("token", data.token);
 
     } catch (err) {
       setError("Error de conexión con el servidor");
