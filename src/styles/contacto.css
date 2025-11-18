@@ -1,0 +1,231 @@
+/* ==========================================================
+   📩 CONTACTO - Diseño Premium estilo tienda profesional
+   ========================================================== */
+
+.contacto-main {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  display:flex;
+  flex-direction: column; 
+}
+
+/* ===== HERO ===== */
+.hero-contacto {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.hero-content .sub {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===== FORMULARIO ===== */
+.seccion-formulario {
+  padding: 60px 0 40px;
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.formulario-contenedor {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+}
+
+.formulario-contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grupo-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.campo label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #1e293b;
+  background: #f8fafc;
+  transition: all 0.25s ease;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: #93c5fd;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.2);
+}
+
+.campo-textarea textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.btn-enviar {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-enviar:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d3d99 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(29, 78, 216, 0.4);
+}
+
+/* ===== BANDA DE CONTACTO - Justo arriba del footer ===== */
+.banda-contacto {
+  background: white;
+  padding: 40px 20px;
+  border-top: 1px solid #e2e8f0;
+ 
+  margin-top: auto; /* ← Añade esto */
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px;
+  text-align: center;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  justify-content: center;
+}
+
+.info-item .icono {
+  font-size: 1.5rem;
+  color: #1d4ed8;
+  margin-top: 4px;
+}
+
+.info-item div {
+  text-align: left;
+}
+
+.info-item h3 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.info-item p {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero-contacto {
+    padding: 50px 0;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content .sub {
+    font-size: 1.1rem;
+  }
+
+  .grupo-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-contenedor {
+    padding: 30px 20px;
+  }
+
+  .btn-enviar {
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .info-item {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-item div {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-contacto {
+    padding: 40px 0;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .formulario-contenedor {
+    border-radius: 16px;
+  }
+
+  .info-item h3 {
+    font-size: 1rem;
+  }
+}

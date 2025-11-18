@@ -1,0 +1,362 @@
+/* ==========================================================
+   🔩 NOSOTROS - Diseño Premium estilo tienda profesional
+   ========================================================== */
+
+.nosotros-main {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+  background: #f9fafb;
+}
+
+/* ===== HERO ===== */
+.hero-nosotros {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+              url("../assets/img/Ferreteria.jpg") center/cover no-repeat;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.hero-content .subtitulo {
+  display: block;
+  font-size: 1rem;
+  color: #ffc107;
+  margin-bottom: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.hero-content h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-content .lead {
+  font-size: 1.3rem;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+/* ===== SECCIÓN DE CONTENIDO (HISTORIA) ===== */
+.seccion-contenido {
+  padding: 80px 0;
+  background: white;
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.grid-dos-columnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.contenido-texto .etiqueta {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.contenido-texto h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+
+.contenido-texto h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 24px 0 16px;
+  color: #1e40af;
+}
+
+.contenido-texto p {
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.contenido-imagen img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease;
+}
+
+.contenido-imagen img:hover {
+  transform: scale(1.02);
+}
+
+/* ===== VALORES ===== */
+.seccion-valores {
+  padding: 80px 0;
+  background: #f1f5f9;
+}
+
+.titulo-centrado {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.titulo-centrado .etiqueta {
+  display: inline-block;
+  background: #ffedd5;
+  color: #c2410c;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.titulo-centrado h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 16px;
+}
+
+.valores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+.valor-card {
+  background: white;
+  padding: 32px 24px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.valor-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.valor-card .icono {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #1d4ed8;
+}
+
+.valor-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #1e293b;
+}
+
+.valor-card p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* ===== EQUIPO ===== */
+.seccion-equipo {
+  padding: 80px 0;
+  background: white;
+}
+
+.subtitulo-equipo {
+  color: #64748b;
+  max-width: 700px;
+  margin: 16px auto 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.equipo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 36px;
+  justify-items: center;
+}
+
+.miembro-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 280px;
+}
+
+.miembro-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+.miembro-imagen {
+  height: 260px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.miembro-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.miembro-card:hover .miembro-imagen img {
+  transform: scale(1.1);
+}
+
+.miembro-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 20px 0 8px;
+  color: #1e293b;
+}
+
+.miembro-card .rol {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+/* ===== CTA FINAL ===== */
+.seccion-cta {
+  background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.seccion-cta h2 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.seccion-cta p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 32px;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+.btn-cta {
+  background: #ffc107;
+  color: #1e293b;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 48px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cta:hover {
+  background: #ffca2c;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: 2.6rem;
+  }
+
+  .grid-dos-columnas {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-nosotros {
+    height: 400px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content .lead {
+    font-size: 1.1rem;
+  }
+
+  .grid-dos-columnas {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .contenido-imagen {
+    display: flex;
+    justify-content: center;
+  }
+
+  .seccion-cta h2 {
+    font-size: 2rem;
+  }
+
+  .btn-cta {
+    padding: 14px 36px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-nosotros {
+    height: 350px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content .lead {
+    font-size: 1rem;
+  }
+
+  .contenedor {
+    padding: 0 16px;
+  }
+
+  .valores-grid,
+  .equipo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-cta h2 {
+    font-size: 1.8rem;
+  }
+
+  .seccion-cta p {
+    font-size: 1rem;
+  }
+}

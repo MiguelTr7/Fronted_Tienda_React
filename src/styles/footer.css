@@ -1,0 +1,238 @@
+/* ==========================================================
+   🔩 FOOTER - Diseño Premium estilo tienda profesional
+   ========================================================== */
+
+.footer-moderno {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #f1f5f9;
+  padding: 60px 0 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.footer-contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+}
+
+/* ===== LOGO Y MARCA ===== */
+.logo-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo-footer .icono {
+  font-size: 1.8rem;
+  color: #ffc107;
+}
+
+.logo-footer h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.footer-columna p {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ===== REDES SOCIALES ===== */
+.redes-sociales {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.redes-sociales a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.redes-sociales a:hover {
+  background: #1d4ed8;
+  transform: translateY(-3px);
+}
+
+/* ===== ENLACES Y CONTACTO ===== */
+.footer-columna h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: white;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.footer-columna h4::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: #ffc107;
+  border-radius: 2px;
+}
+
+.footer-columna ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-columna ul li {
+  margin-bottom: 12px;
+}
+
+.footer-columna ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-columna ul li a:hover {
+  color: #ffc107;
+}
+
+.contacto-info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* ===== FORMULARIO DE SUSCRIPCIÓN ===== */
+.formulario-suscripcion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formulario-suscripcion input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.formulario-suscripcion input::placeholder {
+  color: #94a3b8;
+}
+
+.formulario-suscripcion input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.formulario-suscripcion button {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.25);
+}
+
+.formulario-suscripcion button:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d3d99 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.35);
+}
+
+/* ===== LÍNEA INFERIOR ===== */
+.footer-derechos {
+  background: #0f172a;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #1e293b;
+  margin-top: 40px;
+}
+
+.footer-derechos p {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.politicas {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.politicas a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.politicas a:hover {
+  color: #ffc107;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .footer-contenedor {
+    gap: 30px;
+  }
+
+  .redes-sociales {
+    gap: 12px;
+  }
+
+  .redes-sociales a {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-contenedor {
+    padding: 0 16px;
+  }
+
+  .logo-footer h3 {
+    font-size: 1.3rem;
+  }
+
+  .footer-derechos {
+    padding: 16px 10px;
+  }
+
+  .politicas {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

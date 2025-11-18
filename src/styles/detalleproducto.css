@@ -1,0 +1,230 @@
+/* ==========================================================
+   🔍 DETALLE DE PRODUCTO - Diseño Premium
+   ========================================================== */
+
+.detalles-main {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding-bottom: 60px;
+}
+
+/* ===== TÍTULO ===== */
+.seccion-titulo {
+  text-align: center;
+  padding: 60px 20px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.seccion-titulo h2 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.sub {
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ===== SECCIÓN PRINCIPAL ===== */
+.detalles-contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.detalles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ===== IMAGEN ===== */
+.detalles-imagen {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detalles-imagen img {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.detalles-imagen img:hover {
+  transform: scale(1.03);
+}
+
+/* ===== INFORMACIÓN DEL PRODUCTO ===== */
+.detalles-info {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.detalles-info h3 {
+  font-size: 2rem;
+  color: #1e293b;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.precio-detalle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.descripcion {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.acciones {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex: 1;
+  min-width: 180px;
+}
+
+.btn-primario {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+}
+
+.btn-primario:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d3d99 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(29, 78, 216, 0.4);
+}
+
+.btn-secundario_detalle {
+  background: #f1f5f9;
+  color: #1d4ed8;
+  border: 2px solid #e2e8f0;
+}
+
+.btn-secundario:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+/* ===== PRODUCTO NO ENCONTRADO ===== */
+.producto-no-encontrado {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.producto-no-encontrado h2 {
+  font-size: 2rem;
+  color: #dc2626;
+  margin-bottom: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .detalles-grid {
+    gap: 40px;
+  }
+
+  .detalles-imagen {
+    padding: 20px;
+  }
+
+  .detalles-info {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .seccion-titulo h2 {
+    font-size: 2rem;
+  }
+
+  .detalles-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .detalles-imagen {
+    order: 2;
+  }
+
+  .detalles-info {
+    order: 1;
+    padding: 24px;
+  }
+
+  .precio-detalle {
+    font-size: 1.8rem;
+  }
+
+  .acciones {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .seccion-titulo {
+    padding: 40px 16px 30px;
+  }
+
+  .seccion-titulo h2 {
+    font-size: 1.8rem;
+  }
+
+  .detalles-info h3 {
+    font-size: 1.6rem;
+  }
+
+  .precio-detalle {
+    font-size: 1.6rem;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+}

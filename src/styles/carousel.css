@@ -1,0 +1,33 @@
+/* Estilo del contenedor del carousel */
+.destacados {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.producto img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover; /* Recorta la imagen y ajusta su tamaño */
+  border-radius: 8px;
+}
+
+.producto h4 {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.producto p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.slick-prev, .slick-next {
+  font-size: 20px;
+  color: #0d6efd;
+}
+
+.slick-prev:hover, .slick-next:hover {
+  color: #1565c0;
+}

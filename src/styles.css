@@ -1,0 +1,518 @@
+/* 
+   BASE (mobile-first)
+   - Reset mínimo y tipografía simple
+   - Todo parte pensando en celular y luego mejoro con media queries
+ */
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background:#f4f6f8;   /* gris muy claro para contraste */
+  color:#222;           /* texto oscuro, fácil de leer */
+  line-height:1.5;
+}
+img{ max-width:100%; display:block; } /* imágenes no se salen del contenedor */
+ul{ list-style:none; }                 /* quito viñetas por defecto */
+a{ text-decoration:none; color:inherit; } /* links sin subrayado */
+
+/* 
+   HEADER (logo + menú + carrito)
+   - Flex para alinear horizontal
+   - flex-wrap permite que baje a dos líneas en pantallas chicas
+ */
+header{
+  background:#1e88e5;  /* azul corporativo */
+  color:#fff;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;      /* móvil: si no cabe, se parte en 2 líneas */
+}
+
+/* LOGO (imagen + nombre) */
+.logo{ display:flex; align-items:center; gap:8px; }
+.logo img{
+  width:40px; height:40px;
+  border-radius:50%;   /* círculo para verse más “marca” */
+  background:#fff; padding:4px;
+}
+.logo h1{ font-size:20px; }
+
+/* Menú principal */
+.menu{ display:flex; gap:10px; flex-wrap:wrap; }
+.menu a{
+  color:#fff;
+  padding:6px 10px;
+  border-radius:6px;
+}
+.menu a:hover{ background:#1565c0; } /* hover más oscuro */
+.menu .activo{ background:#0d63b0; }  /* marca la página actual */
+
+/* Carrito (contador lo haremos dinámico con JS después) */
+.carrito{ display:flex; align-items:center; gap:6px; }
+.carrito img{ width:24px; height:24px; }
+.carrito span{
+  background:#000;     /* pastilla negra simple */
+  color:#f1f1f1;
+  font-weight:bold;
+  padding:4px 8px;
+  border-radius:12px;
+  font-size:13px;
+}
+
+/* 
+   NAV SECUNDARIO (Iniciar sesión / Registrar)
+   - Barra separada del header
+   - Justificado a la DERECHA (requisito del usuario)
+ */
+.nav-secundario{
+  background:#e9edf2;
+  border-top:1px solid #d7dde5;
+  border-bottom:1px solid #d7dde5;
+}
+.nav-secundario ul{
+  padding:8px 16px;
+  display:flex; gap:10px; flex-wrap:wrap;
+  max-width:1100px; margin:0 auto;
+  justify-content:flex-end; /* 👉 alinea a la derecha */
+}
+.nav-secundario a{
+  background:#fff;
+  border:1px solid #d7dde5;
+  padding:6px 10px;
+  border-radius:6px;
+}
+.nav-secundario a:hover{ background:#f7f9fc; }
+
+/* 
+   HERO (mensaje + botones + imagen)
+   - En móvil: apilado (texto arriba, imagen abajo)
+   - En >=700px: 2 columnas (texto | imagen)
+ */
+.hero{
+  max-width:1100px;
+  margin:16px auto;
+  padding:16px;
+  background:#fff;
+  border:1px solid #e3e7ee;
+  border-radius:10px;
+
+  display:grid;
+  gap:14px;               /* móvil: apilado */
+}
+.hero-texto h2{ font-size:24px; margin-bottom:6px; }
+.hero-texto p{ color:#555; margin-bottom:12px; }
+.hero-botones{ display:flex; gap:10px; flex-wrap:wrap; }
+.btn{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+}
+.btn-primario{ background:#1e88e5; color:#fff; }
+.btn-primario:hover{ background:#1565c0; }
+.btn-secundario{ background:#f4f6f8; border:1px solid #d7dde5; color:#222; }
+.btn-secundario:hover{ background:#e9edf2; }
+.hero-imagen img{ border-radius:8px; }
+
+.productos{
+  max-width:1100px;
+  margin:16px auto 28px;
+  padding:0 16px;
+
+  display:grid;
+  gap:12px;
+  grid-template-columns: 1fr 1fr; /* 2 columnas en móvil */
+}
+.card{
+  background:#fff;
+  border:1px solid #e3e7ee;
+  border-radius:10px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.card img{
+  width:100%;
+  height:150px;       /* alto fijo para que todas las cards se vean parejas */
+  object-fit:cover;   /* recorta imagen conservando proporción */
+  background:#eee;
+  border-radius:8px;
+}
+.card h3{ font-size:16px; }
+.precio{ color:#1e88e5; font-weight:bold; }
+.btn-negro{
+  background:#111; color:#fff;
+  padding:8px 10px;
+  border-radius:6px;
+  margin-top:auto;    /* botón pegado abajo */
+}
+.btn-negro:hover{ background:#333; }
+
+/* 
+   FOOTER (grid ordenado)
+   - Desktop: 2 columnas [brand | links] y la suscripción debajo de brand
+   - Móvil: apilado y centrado
+ */
+footer{
+  background:#222; color:#ddd; margin-top:20px;
+}
+footer .inner{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:16px;
+
+  display:grid; gap:12px;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "brand links"
+    "form  links";
+  align-items:center;
+}
+.footer-brand{ grid-area: brand; font-size:16px; }
+
+/* Links a la derecha */
+.footer-links{
+  grid-area: links;
+  display:flex; gap:10px; flex-wrap:wrap;
+  justify-content:flex-end;   /* 👉 a la derecha */
+}
+.footer-links a{ background:#333; padding:6px 10px; border-radius:6px; }
+.footer-links a:hover{ background:#444; }
+
+/* Formulario de suscripción debajo de la marca */
+.suscripcion{
+  grid-area: form;
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.suscripcion input{
+  width:260px; max-width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #444;
+  background:#111; color:#eee;
+}
+.suscripcion button{
+  padding:8px 12px;
+  border-radius:6px;
+  border:1px solid #444;
+  background:#333; color:#eee;
+}
+.suscripcion button:hover{ background:#3a3a3a; }
+
+/* Accesibilidad: etiqueta “solo para lectores de pantalla” */
+.sr-only{
+  position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);
+}
+
+/* Foco visible con teclado (TAB) */
+a:focus-visible, button:focus-visible, input:focus-visible{
+  outline:2px solid #1e88e5; outline-offset:2px;
+}
+
+/* 
+   BREAKPOINTS (mejoras progresivas)
+ */
+
+/*  700px: el hero pasa a 2 columnas (texto | imagen) */
+@media (min-width:700px){
+  .hero{
+    grid-template-columns: 1.2fr 1fr;
+    align-items:center;
+  }
+}
+
+/*  1000px: productos con 3 columnas */
+@media (min-width:1000px){
+  .productos{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/*  700px: footer apilado y centrado (móvil) */
+@media (max-width:700px){
+  footer .inner{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "brand"
+      "links"
+      "form";
+    text-align:center;
+  }
+  .footer-links{ justify-content:center; }
+  .suscripcion{ justify-content:center; }
+}
+
+
+/*  títulos y texto de sección  */
+.seccion-titulo{ max-width:1100px; margin:16px auto; padding:0 16px; }
+.seccion-titulo .sub{ color:#555; }
+
+/*  ajustes tarjetas productos  */
+.card-acciones{ display:flex; gap:8px; }
+
+/*  detalle producto  */
+.detalle{
+  max-width:1100px; margin:16px auto; padding:16px;
+  background:#fff; border:1px solid #e3e7ee; border-radius:10px;
+  display:grid; gap:12px;          /* móvil apilado */
+}
+.detalle-img img{ border-radius:8px; background:#eee; }
+.detalle-info .detalle-btns{ display:flex; gap:10px; flex-wrap:wrap; }
+
+/* en >=700px pongo dos columnas */
+@media (min-width:700px){
+  .detalle{ grid-template-columns: 1fr 1.2fr; align-items:start; }
+}
+
+/*  formularios básicos  */
+.form{
+  max-width:700px; margin:16px auto; padding:16px;
+  background:#fff; border:1px solid #e3e7ee; border-radius:10px;
+  display:grid; gap:12px;
+}
+.campo{ display:grid; gap:6px; }
+.campo label{ font-weight:bold; }
+.campo input, .campo textarea, .campo select{
+  padding:10px; border:1px solid #cfd6e0; border-radius:8px; background:#fff;
+}
+
+/* formulario en grilla (admin) */
+.form-grid{ grid-template-columns: 1fr 1fr; }
+.form-grid .campo{ grid-column: span 1; }
+.form-grid .btn{ grid-column: 1 / -1; justify-self:start; }
+@media (max-width:700px){ .form-grid{ grid-template-columns: 1fr; } }
+
+/* ===== auth (login/registro) ===== */
+.auth{
+  max-width:700px; margin:20px auto; padding:16px;
+  background:#fff; border:1px solid #e3e7ee; border-radius:10px; text-align:left;
+}
+.auth > h2{ margin-bottom:8px; }
+
+.tabla{ border:1px solid #e3e7ee; border-radius:10px; overflow:hidden; margin:10px 0 16px; }
+.t-row{ display:grid; grid-template-columns: repeat(4, 1fr); }
+.t-row > span{ padding:10px; border-bottom:1px solid #eef2f7; }
+.t-head > span{ background:#f4f6f8; font-weight:bold; }
+@media (max-width:700px){
+  .t-row{ grid-template-columns: 1fr 1fr; }
+}
+
+.admin{
+  max-width:1100px; margin:16px auto; padding:0 16px;
+  display:grid; gap:16px;
+  grid-template-columns: 220px 1fr;  /* menú | contenido */
+}
+.admin-menu{
+  background:#fff; border:1px solid #e3e7ee; border-radius:10px; padding:12px;
+}
+.admin-menu h3{ margin-bottom:8px; }
+.admin-menu ul{ display:grid; gap:8px; }
+.admin-menu a{ background:#f4f6f8; border:1px solid #d7dde5; padding:8px 10px; border-radius:8px; }
+.admin-menu a:hover{ background:#e9edf2; }
+
+.admin-content{ display:grid; gap:16px; }
+.admin-box{
+  background:#fff; border:1px solid #e3e7ee; border-radius:10px; padding:12px;
+}
+
+/* móvil: admin apilado */
+@media (max-width:800px){
+  .admin{ grid-template-columns: 1fr; }
+}
+
+
+/* Carrito: 5 columnas (Producto | Precio | Cantidad | Subtotal | Acciones) */
+.tabla.cart .t-row { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; align-items: center; }
+.cart-qty { display:flex; align-items:center; gap:6px; }
+.cart-actions { display:flex; gap:6px; }
+
+.btn-sm { padding:6px 8px; border-radius:6px; font-size: 14px; }
+@media (max-width:700px){
+  /* en móvil: 2 columnas para que no se rompa */
+  .tabla.cart .t-row { grid-template-columns: 1fr 1fr; }
+  .tabla.cart .t-row > span:nth-child(1){ grid-column: 1 / -1; } /* Producto ancho */
+}
+
+/*  mensajes de error sencillos (presentación clara)  */
+.error-msg{
+  color:#c62828;         /* rojo suave */
+  font-size: 14px;
+  margin-top: 4px;
+}
+.invalid{
+  border-color:#c62828 !important;
+  outline: none;
+}
+
+
+/*  Cuenta / Sesión en header  */
+.cuenta{
+  display:flex; align-items:center; gap:8px; color:#fff; flex-wrap:wrap;
+}
+.cuenta .user{
+  display:flex; align-items:center; gap:6px; background:rgba(0,0,0,.15);
+  padding:6px 10px; border-radius:999px;
+}
+.cuenta .user img{ width:22px; height:22px; border-radius:50%; background:#fff; }
+.cuenta .email{ font-size:14px; }
+.cuenta .acciones{ display:flex; gap:6px; }
+.btn-link{
+  background:#1565c0; color:#fff; padding:6px 10px; border-radius:6px;
+}
+.btn-link:hover{ background:#0d63b0; }
+
+
+/* Cuenta / Sesión en header */
+.cuenta{ display:flex; align-items:center; gap:8px; color:#fff; flex-wrap:wrap; }
+.cuenta .user{ display:flex; align-items:center; gap:6px; background:rgba(0,0,0,.15); padding:6px 10px; border-radius:999px; }
+.cuenta .user img{ width:22px; height:22px; border-radius:50%; background:#fff; }
+.cuenta .email{ font-size:14px; }
+.cuenta .acciones{ display:flex; gap:6px; }
+.btn-link{ background:#1565c0; color:#fff; padding:6px 10px; border-radius:6px; }
+.btn-link:hover{ background:#0d63b0; }
+
+/* Perfil */
+.profile-box{ background:#fff; border:1px solid #e3e7ee; border-radius:10px; padding:12px; margin-bottom:12px; }
+
+/* Fotter */
+footer {
+  background-color: #212529;
+  color: #f8f9fa;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+footer .inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.footer-brand {
+  font-size: 1.5rem;
+  color: #ffc107;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer-links a {
+  color: #f8f9fa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #0d6efd;
+}
+
+.suscripcion {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.suscripcion input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 220px;
+}
+
+.suscripcion button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suscripcion button:hover {
+  background-color: #0b5ed7;
+}
+
+.copy {
+  font-size: 0.9rem;
+  color: #adb5bd;
+  margin-top: 25px;
+}
+
+/* home cuadritos */
+
+/* ====== Productos destacados ====== */
+.destacados {
+  text-align: center;
+  padding: 60px 40px;
+  background-color: #f8f9fa;
+}
+
+.destacados h3 {
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.destacados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* crea cuadritos */
+  gap: 25px;
+  justify-items: center;
+}
+
+.producto {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 280px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.producto img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.producto h4 {
+  color: #212529;
+  font-size: 1.2rem;
+  margin-top: 5px;
+}
+
+.producto p {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+.destacados-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}

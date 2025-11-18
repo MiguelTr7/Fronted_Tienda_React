@@ -1,0 +1,72 @@
+/* ===== Página de lista de blogs ===== */
+.blogs-page {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.lista-blogs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.blog-card {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.blog-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-card .contenido {
+  padding: 20px;
+}
+
+.blog-card h3 {
+  color: #0d6efd;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.blog-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+/* ===== Página individual de blog ===== */
+.blog-detalle {
+  max-width: 900px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blog-detalle h2 {
+  color: #0d6efd;
+  margin-bottom: 20px;
+}
+
+.blog-detalle p {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+/*  */

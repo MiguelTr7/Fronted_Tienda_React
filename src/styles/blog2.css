@@ -1,0 +1,221 @@
+/* ==========================================================
+   🌟 BLOG 2 - Estilo Premium / Profesional
+   ========================================================== */
+
+/* ===== Hero principal ===== */
+.blog2-hero {
+  position: relative;
+  width: 100%;
+  max-height: 420px;
+  overflow: hidden;
+  border-radius: 0;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Imagen con animación de entrada suave */
+.blog2-hero img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(70%) saturate(110%);
+  opacity: 0;
+  transform: scale(1.05);
+  animation: fadeInHero 1.8s ease forwards;
+  transition: transform 10s ease, filter 1s ease;
+}
+
+/* Movimiento lento tipo “parallax” al pasar el mouse */
+.blog2-hero:hover img {
+  transform: scale(1.1);
+  filter: brightness(80%) saturate(120%);
+}
+
+@keyframes fadeInHero {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Capa de texto superpuesta */
+.blog2-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+.blog2-overlay h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.blog2-overlay p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  color: #f8f9fa;
+}
+
+/* ===== Contenido principal ===== */
+.blog2-contenido {
+  max-width: 900px;
+  margin: 0 auto 60px auto;
+  padding: 40px 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  line-height: 1.7;
+  transition: box-shadow 0.3s ease;
+}
+
+.blog2-contenido:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.blog2-contenido h2 {
+  color: #0d6efd;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.blog2-contenido p {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+/* ===== Introducción ===== */
+.blog2-intro {
+  background: linear-gradient(135deg, #e9f1ff, #ffffff);
+  border-left: 5px solid #0d6efd;
+  padding: 20px 25px;
+  border-radius: 8px;
+  margin-bottom: 35px;
+  font-style: italic;
+  color: #444;
+  box-shadow: 0 3px 10px rgba(13, 110, 253, 0.1);
+}
+
+/* ===== Bloques de contenido ===== */
+.blog2-section {
+  margin-bottom: 25px;
+  padding: 15px 10px;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.blog2-section:hover {
+  transform: translateY(-3px);
+  border-left: 4px solid #0d6efd;
+  background: #f8faff;
+  box-shadow: 0 3px 10px rgba(13, 110, 253, 0.08);
+  border-radius: 8px;
+}
+
+.blog2-section h2 {
+  color: #0d6efd;
+  margin-bottom: 8px;
+}
+
+.blog2-section p {
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== Advertencia ===== */
+.blog2-warning {
+  background-color: #fff3cd;
+  border-left: 6px solid #ffc107;
+  margin: 40px 0;
+  padding: 18px 25px;
+  color: #856404;
+  font-style: italic;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(255, 193, 7, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.blog2-warning:hover {
+  transform: translateY(-2px);
+}
+
+/* ===== Conclusión ===== */
+.blog2-final {
+  background: #f5f7fa;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 45px;
+  border-top: 3px solid #0d6efd;
+}
+
+.blog2-final p {
+  color: #222;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.blog2-final strong {
+  color: #0d6efd;
+}
+
+/* ===== Botón volver ===== */
+.volver-blog {
+  text-align: left;
+  margin-top: 40px;
+}
+
+.volver-blog .btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #0d6efd, #007bff);
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+.volver-blog .btn:hover {
+  background: linear-gradient(90deg, #0b5ed7, #0056b3);
+  transform: translateY(-2px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .blog2-hero img {
+    height: 300px;
+  }
+
+  .blog2-overlay h1 {
+    font-size: 1.6rem;
+  }
+
+  .blog2-overlay p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .blog2-contenido {
+    padding: 25px 15px;
+  }
+
+  .blog2-intro {
+    padding: 15px;
+  }
+}

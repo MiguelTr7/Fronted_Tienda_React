@@ -1,0 +1,201 @@
+/* ==========================================================
+   🛒 PRODUCTOS - Diseño Premium estilo tienda retail (Sodimac / Falabella)
+   ========================================================== */
+
+.productos-main {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  padding-bottom: 60px;
+}
+
+/* ===== TÍTULO ===== */
+.seccion-titulo-productos {
+  text-align: center;
+  padding: 60px 20px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.seccion-titulo-productos h2 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.sub {
+  color: #64748b;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ===== GRID DE PRODUCTOS ===== */
+.productos-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 36px;
+  justify-items: center;
+}
+
+/* ===== TARJETA DE PRODUCTO ===== */
+.tarjeta-producto {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-producto:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.imagen-contenedor {
+  height: 200px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.imagen-contenedor img {
+   max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 36px;
+  justify-items: center;
+}
+
+.tarjeta-producto:hover .imagen-contenedor img {
+  transform: scale(1.05);
+}
+
+.contenido-producto {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contenido-producto h3 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  font-weight: 700;
+  margin-bottom: 12px;
+  min-height: 0px; /* Para alinear títulos */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: center;
+}
+
+.precio {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  margin: 8px 0 20px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.acciones-producto {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-detalle {
+  background: #f1f5f9;
+  color: #1d4ed8;
+}
+
+.btn-detalle:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+.btn-agregar_producto {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  color: white;
+  box-shadow: 0 4px 10px rgba(29, 78, 216, 0.25);
+}
+
+.btn-agregar:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #1d3d99 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.35);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .seccion-titulo h2 {
+    font-size: 2rem;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 28px;
+    padding: 0 16px;
+  }
+
+  .imagen-contenedor {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seccion-titulo {
+    padding: 40px 16px 30px;
+  }
+
+  .seccion-titulo h2 {
+    font-size: 1.8rem;
+  }
+
+  .productos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .imagen-contenedor {
+    height: 160px;
+  }
+
+  .acciones-producto {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
