@@ -25,7 +25,8 @@ function IniciarSesion() {
 
     try {
       // ✅ Usamos la URL del backend configurada en .env
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+     const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/login", {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -126,3 +127,4 @@ function IniciarSesion() {
 }
 
 export default IniciarSesion;
+
