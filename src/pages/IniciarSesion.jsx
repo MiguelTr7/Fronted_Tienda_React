@@ -45,31 +45,40 @@ function IniciarSesion() {
         return;
       }
 
-      // Intentar obtener el rol desde varias posibles propiedades
-      const rolRaw =
-        data?.rol ??
-        data?.role ??
-        data?.usuario?.rol ??
-        data?.user?.rol ??
-        data?.userRole ??
-        null;
-
-      if (!rolRaw) {
-        setError("El servidor no está enviando el rol del usuario. Revisa el backend.");
-        console.warn("Respuesta de login sin rol:", data);
+      if (!data || !data.token) {
+        setError("Respuesta inesperada del servidor de login");
+        console.warn("Respuesta inesperada:", data);
         return;
       }
 
-      const rolNormalizado = String(rolRaw).toUpperCase();   // ADMIN, CLIENTE, etc.
-      const rolLower = rolNormalizado.toLowerCase();         // admin, cliente, etc.
+      // --- TOMAR EL ROL DESDE data.roles (List<String>) ---
+      let rolBackend = null;
 
+      if (Array.isArray(data.roles) && data.roles.length > 0) {
+        rolBackend = data.roles[0]; // por ejemplo "ROLE_ADMIN"
+      }
+
+      if (!rolBackend) {
+        setError("El servidor no está enviando roles del usuario.");
+        console.warn("Respuesta de login sin roles:", data);
+        return;
+      }
+
+      // Limpiamos el prefijo ROLE_ y normalizamos
+      const rolNormalizado = String(rolBackend)
+        .replace(/^ROLE_/, "") // quita ROLE_ si viene
+        .toUpperCase();        // ADMIN, USER, etc.
+
+      const rolLower = rolNormalizado.toLowerCase(); // admin, user...
+
+      // Como el backend devuelve username, lo usamos como email y nombre
       const userData = {
-        email: data.email ?? data.username ?? "",
-        nombre: data.nombre ?? data.name ?? "",
+        email: data.username || formData.email,
+        nombre: data.username || "",
         rol: rolLower
       };
 
-      if (rolNormalizado === "ADMIN" || rolNormalizado === "ROLE_ADMIN") {
+      if (rolNormalizado === "ADMIN") {
         localStorage.setItem("adminActivo", JSON.stringify(userData));
         navigate("/admin");
       } else {
@@ -77,12 +86,8 @@ function IniciarSesion() {
         navigate("/productos");
       }
 
-      // Guardar token si viene
-      if (data.token || data.jwt) {
-        localStorage.setItem("token", data.token ?? data.jwt);
-      } else {
-        console.warn("Login sin token en la respuesta:", data);
-      }
+      // Guardar token
+      localStorage.setItem("token", data.token);
 
     } catch (err) {
       setError("Error de conexión con el servidor");
