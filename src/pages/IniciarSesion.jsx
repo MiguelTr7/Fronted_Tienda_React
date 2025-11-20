@@ -24,28 +24,52 @@ function IniciarSesion() {
     setError("");
 
     try {
-      const response = await fetch("https://backend-tienda-react.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        "https://backend-tienda-react.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        }
+      );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
+
+      console.log("STATUS LOGIN:", response.status);
+      console.log("DATA LOGIN:", data);
 
       if (!response.ok) {
-        setError(data.message || "Correo o contraseña incorrectos");
+        setError((data && data.message) || "Correo o contraseña incorrectos");
         return;
       }
 
+      // Intentar obtener el rol desde varias posibles propiedades
+      const rolRaw =
+        data?.rol ??
+        data?.role ??
+        data?.usuario?.rol ??
+        data?.user?.rol ??
+        data?.userRole ??
+        null;
+
+      if (!rolRaw) {
+        setError("El servidor no está enviando el rol del usuario. Revisa el backend.");
+        console.warn("Respuesta de login sin rol:", data);
+        return;
+      }
+
+      const rolNormalizado = String(rolRaw).toUpperCase();   // ADMIN, CLIENTE, etc.
+      const rolLower = rolNormalizado.toLowerCase();         // admin, cliente, etc.
+
       const userData = {
-        email: data.email,
-        nombre: data.nombre,
-        rol: data.rol.toLowerCase()
+        email: data.email ?? data.username ?? "",
+        nombre: data.nombre ?? data.name ?? "",
+        rol: rolLower
       };
 
-      if (data.rol === "ADMIN") {
+      if (rolNormalizado === "ADMIN" || rolNormalizado === "ROLE_ADMIN") {
         localStorage.setItem("adminActivo", JSON.stringify(userData));
         navigate("/admin");
       } else {
@@ -53,7 +77,12 @@ function IniciarSesion() {
         navigate("/productos");
       }
 
-      localStorage.setItem("token", data.token);
+      // Guardar token si viene
+      if (data.token || data.jwt) {
+        localStorage.setItem("token", data.token ?? data.jwt);
+      } else {
+        console.warn("Login sin token en la respuesta:", data);
+      }
 
     } catch (err) {
       setError("Error de conexión con el servidor");
@@ -71,7 +100,9 @@ function IniciarSesion() {
           </div>
 
           <h2>Iniciar sesión</h2>
-          <p className="sub">Accede a tu cuenta para realizar compras y ver tus pedidos.</p>
+          <p className="sub">
+            Accede a tu cuenta para realizar compras y ver tus pedidos.
+          </p>
 
           {error && (
             <div className="alerta-error">
