@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// ❌ ya no usamos productosData
-// import productosData from "../data/productos";
 import "../styles/styles.css";
 import "../styles/admin.css";
 
@@ -29,7 +27,8 @@ function Admin() {
     nombre: "",
     precio: "",
     categoriaId: 1,
-    descripcion: ""
+    descripcion: "",
+    imagen: ""
   });
 
   useEffect(() => {
@@ -71,7 +70,7 @@ function Admin() {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
-    console.log("TOKEN EN GUARDAR PRODUCTO:", token); // 👈 DEBUG
+    console.log("TOKEN EN GUARDAR PRODUCTO:", token); // DEBUG
 
     if (!token) {
       alert("Sesión expirada. Inicia sesión nuevamente.");
@@ -84,7 +83,7 @@ function Admin() {
       precio: Number(formProducto.precio),
       categoriaId: Number(formProducto.categoriaId),
       descripcion: formProducto.descripcion,
-      imagen: null
+      imagen: formProducto.imagen || null
     };
 
     const url = productoEditando
@@ -103,7 +102,7 @@ function Admin() {
         body: JSON.stringify(payload)
       });
 
-      console.log("STATUS GUARDAR PRODUCTO:", res.status); // 👈 DEBUG
+      console.log("STATUS GUARDAR PRODUCTO:", res.status); // DEBUG
 
       if (!res.ok) {
         throw new Error("Error al guardar producto");
@@ -125,7 +124,7 @@ function Admin() {
       setProductos(nuevosProductos);
 
       // Resetear formulario
-      setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "" });
+      setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "", imagen: "" });
       setProductoEditando(null);
       setMostrarFormProducto(false);
     } catch (err) {
@@ -140,7 +139,8 @@ function Admin() {
       nombre: producto.nombre,
       precio: producto.precio,
       categoriaId: producto.categoriaId,
-      descripcion: producto.descripcion || ""
+      descripcion: producto.descripcion || "",
+      imagen: producto.imagen || ""
     });
     setMostrarFormProducto(true);
   };
@@ -151,7 +151,7 @@ function Admin() {
     }
 
     const token = localStorage.getItem("token");
-    console.log("TOKEN EN ELIMINAR PRODUCTO:", token); // 👈 DEBUG
+    console.log("TOKEN EN ELIMINAR PRODUCTO:", token); // DEBUG
 
     if (!token) {
       alert("Sesión expirada. Inicia sesión nuevamente.");
@@ -167,7 +167,7 @@ function Admin() {
         }
       });
 
-      console.log("STATUS ELIMINAR PRODUCTO:", res.status); // 👈 DEBUG
+      console.log("STATUS ELIMINAR PRODUCTO:", res.status); // DEBUG
 
       // 204 es lo normal en DELETE sin contenido
       if (!res.ok && res.status !== 204) {
@@ -183,7 +183,7 @@ function Admin() {
   };
 
   const cancelarFormProducto = () => {
-    setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "" });
+    setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "", imagen: "" });
     setProductoEditando(null);
     setMostrarFormProducto(false);
   };
@@ -200,36 +200,15 @@ function Admin() {
           <>
             <div className="admin-header">
               <h2>Dashboard</h2>
-              <p className="sub">Resumen de las actividades diarias</p>
+              <p className="sub">Vista general del sistema (en construcción).</p>
             </div>
 
-            {/* Tarjetas de estadísticas */}
-            <div className="admin-stats-grid">
-              <div className="admin-stat-card blue">
-                <div className="admin-stat-icon">🛒</div>
-                <div className="admin-stat-number">1,234</div>
-                <div className="admin-stat-text">Transabilidad de compras: 78%</div>
-              </div>
-
-              <div className="admin-stat-card green">
-                <div className="admin-stat-icon">📦</div>
-                <div className="admin-stat-number">400</div>
-                <div className="admin-stat-text">Inventario actual: 500</div>
-              </div>
-
-              <div className="admin-stat-card orange">
-                <div className="admin-stat-icon">💰</div>
-                <div className="admin-stat-number">890</div>
-                <div className="admin-stat-text">Retorno de inversión diario</div>
-              </div>
-            </div>
-
-            {/* Módulos del Dashboard */}
+            {/* Módulos del Dashboard solo como navegación, sin datos ficticios */}
             <div className="admin-modules-grid">
               <div onClick={() => setSeccionActiva("dashboard")} className="admin-module-card">
                 <div className="admin-module-icon blue">📊</div>
                 <h4>Dashboard</h4>
-                <p className="sub">Visor general de todas las métricas y estadísticas</p>
+                <p className="sub">Visor general de las secciones del sistema</p>
               </div>
 
               <div onClick={() => setSeccionActiva("productos")} className="admin-module-card">
@@ -253,7 +232,7 @@ function Admin() {
               <div onClick={() => setSeccionActiva("reportes")} className="admin-module-card">
                 <div className="admin-module-icon green">📈</div>
                 <h4>Reportes</h4>
-                <p className="sub">Generación de informes detallados</p>
+                <p className="sub">Módulo de reportes en construcción</p>
               </div>
 
               <div onClick={() => setSeccionActiva("perfil")} className="admin-module-card">
@@ -331,6 +310,17 @@ function Admin() {
                       onChange={handleFormProductoChange}
                       placeholder="Descripción del producto"
                       rows="3"
+                    />
+                  </div>
+
+                  <div className="campo">
+                    <label>URL de imagen (opcional)</label>
+                    <input
+                      type="text"
+                      name="imagen"
+                      value={formProducto.imagen}
+                      onChange={handleFormProductoChange}
+                      placeholder="https://ejemplo.com/imagen.jpg"
                     />
                   </div>
 
@@ -442,30 +432,6 @@ function Admin() {
                 )}
               </div>
             </div>
-
-            <div className="admin-white-box">
-              <h3>Historial de Compras (Ejemplo)</h3>
-              <div className="tabla">
-                <div className="t-row t-head">
-                  <span>Usuario</span>
-                  <span>Producto</span>
-                  <span>Fecha</span>
-                  <span>Total</span>
-                </div>
-                <div className="t-row">
-                  <span>Juan Pérez</span>
-                  <span>Teclado Mecánico</span>
-                  <span>12/10/2025</span>
-                  <span>$34.990</span>
-                </div>
-                <div className="t-row">
-                  <span>María González</span>
-                  <span>Martillo de Acero</span>
-                  <span>15/10/2025</span>
-                  <span>$8.990</span>
-                </div>
-              </div>
-            </div>
           </>
         );
 
@@ -474,63 +440,7 @@ function Admin() {
           <>
             <div className="admin-header">
               <h2>Reportes de Ventas</h2>
-              <p className="sub">Estadísticas y métricas del negocio</p>
-            </div>
-
-            <div className="admin-stats-grid">
-              <div className="admin-stat-card blue">
-                <h3>Ventas del Mes</h3>
-                <div className="admin-stat-number">$2,450,000</div>
-                <p className="admin-stat-text">+15% respecto al mes anterior</p>
-              </div>
-
-              <div className="admin-stat-card green">
-                <h3>Productos Vendidos</h3>
-                <div className="admin-stat-number">387</div>
-                <p className="admin-stat-text">Unidades este mes</p>
-              </div>
-
-              <div className="admin-stat-card orange">
-                <h3>Clientes Activos</h3>
-                <div className="admin-stat-number">156</div>
-                <p className="admin-stat-text">Usuarios registrados</p>
-              </div>
-            </div>
-
-            <div className="admin-white-box">
-              <h3>Top 5 Productos Más Vendidos</h3>
-              <div className="tabla admin-report-table">
-                <div className="t-row t-head">
-                  <span>Producto</span>
-                  <span>Ventas</span>
-                  <span>Ingresos</span>
-                </div>
-                <div className="t-row">
-                  <span>Taladro Eléctrico</span>
-                  <span>45 unidades</span>
-                  <span>$675,000</span>
-                </div>
-                <div className="t-row">
-                  <span>Martillo de Acero</span>
-                  <span>38 unidades</span>
-                  <span>$341,620</span>
-                </div>
-                <div className="t-row">
-                  <span>Casco de Seguridad</span>
-                  <span>32 unidades</span>
-                  <span>$448,000</span>
-                </div>
-                <div className="t-row">
-                  <span>Destornillador Set</span>
-                  <span>28 unidades</span>
-                  <span>$196,000</span>
-                </div>
-                <div className="t-row">
-                  <span>Linterna LED</span>
-                  <span>25 unidades</span>
-                  <span>$175,000</span>
-                </div>
-              </div>
+              <p className="sub">Módulo de reportes en construcción.</p>
             </div>
           </>
         );
