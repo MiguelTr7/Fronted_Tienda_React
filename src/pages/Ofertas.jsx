@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/ofertas.css";
-import productos from "../data/productos";
+
+const API_URL = "https://backend-tienda-react.onrender.com";
 
 function Ofertas({ onAgregar }) {
-  // Simulamos descuentos del 20%
+  const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        setCargando(true);
+        setError("");
+
+        const res = await fetch(`${API_URL}/api/productos`);
+        if (!res.ok) {
+          throw new Error("Error al cargar productos");
+        }
+
+        const data = await res.json();
+        // data: [{ id, nombre, precio, categoriaId, descripcion, imagen }]
+        setProductos(data);
+      } catch (err) {
+        console.error("Error cargando productos en ofertas:", err);
+        setError("No se pudieron cargar las ofertas. Intenta más tarde.");
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    fetchProductos();
+  }, []);
+
+  // Aplicamos descuento del 20% a todos los productos cargados
   const productosConDescuento = productos.map((p) => ({
     ...p,
     precioOriginal: p.precio,
@@ -18,7 +48,6 @@ function Ofertas({ onAgregar }) {
       cantidad: 1,
     };
     onAgregar(productoDescuento);
-    // 👇 Opcional: usa un toast en lugar de alert en el futuro
   };
 
   return (
@@ -31,35 +60,58 @@ function Ofertas({ onAgregar }) {
         </p>
       </section>
 
+      {/* Estados de carga / error */}
+      {cargando && (
+        <section className="ofertas-grid">
+          <p>Cargando ofertas...</p>
+        </section>
+      )}
+
+      {error && !cargando && (
+        <section className="ofertas-grid">
+          <p className="error-texto">{error}</p>
+        </section>
+      )}
+
       {/* Grid de ofertas */}
-      <section className="ofertas-grid">
-        {productosConDescuento.map((item) => (
-          <article key={item.id} className="tarjeta-oferta">
-            <div className="etiqueta-descuento">{item.descuento}</div>
-            <div className="imagen-oferta">
-              <img src={item.imagen} alt={item.nombre} loading="lazy" />
-            </div>
-            <div className="contenido-oferta">
-              <h3>{item.nombre}</h3>
-              <div className="precios">
-                <span className="precio-oferta">
-                  ${item.precioOferta.toLocaleString("es-CL")}
-                </span>
-                <span className="precio-original">
-                  ${item.precioOriginal.toLocaleString("es-CL")}
-                </span>
-              </div>
-              <button
-                className="btn btn-agregar"
-                onClick={() => handleAddToCart(item)}
-                aria-label={`Añadir ${item.nombre} al carrito`}
-              >
-                🛒 Añadir al carrito
-              </button>
-            </div>
-          </article>
-        ))}
-      </section>
+      {!cargando && !error && (
+        <section className="ofertas-grid">
+          {productosConDescuento.length === 0 ? (
+            <p>No hay productos en oferta por ahora.</p>
+          ) : (
+            productosConDescuento.map((item) => (
+              <article key={item.id} className="tarjeta-oferta">
+                <div className="etiqueta-descuento">{item.descuento}</div>
+                <div className="imagen-oferta">
+                  {item.imagen ? (
+                    <img src={item.imagen} alt={item.nombre} loading="lazy" />
+                  ) : (
+                    <div className="imagen-placeholder">🛠️</div>
+                  )}
+                </div>
+                <div className="contenido-oferta">
+                  <h3>{item.nombre}</h3>
+                  <div className="precios">
+                    <span className="precio-oferta">
+                      ${item.precioOferta.toLocaleString("es-CL")}
+                    </span>
+                    <span className="precio-original">
+                      ${item.precioOriginal.toLocaleString("es-CL")}
+                    </span>
+                  </div>
+                  <button
+                    className="btn btn-agregar"
+                    onClick={() => handleAddToCart(item)}
+                    aria-label={`Añadir ${item.nombre} al carrito`}
+                  >
+                    🛒 Añadir al carrito
+                  </button>
+                </div>
+              </article>
+            ))
+          )}
+        </section>
+      )}
     </main>
   );
 }
