@@ -71,6 +71,8 @@ function Admin() {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
+    console.log("TOKEN EN GUARDAR PRODUCTO:", token); // 👈 DEBUG
+
     if (!token) {
       alert("Sesión expirada. Inicia sesión nuevamente.");
       navigate("/iniciar-sesion");
@@ -100,6 +102,8 @@ function Admin() {
         },
         body: JSON.stringify(payload)
       });
+
+      console.log("STATUS GUARDAR PRODUCTO:", res.status); // 👈 DEBUG
 
       if (!res.ok) {
         throw new Error("Error al guardar producto");
@@ -147,6 +151,8 @@ function Admin() {
     }
 
     const token = localStorage.getItem("token");
+    console.log("TOKEN EN ELIMINAR PRODUCTO:", token); // 👈 DEBUG
+
     if (!token) {
       alert("Sesión expirada. Inicia sesión nuevamente.");
       navigate("/iniciar-sesion");
@@ -160,6 +166,8 @@ function Admin() {
           Authorization: `Bearer ${token}`
         }
       });
+
+      console.log("STATUS ELIMINAR PRODUCTO:", res.status); // 👈 DEBUG
 
       // 204 es lo normal en DELETE sin contenido
       if (!res.ok && res.status !== 204) {
