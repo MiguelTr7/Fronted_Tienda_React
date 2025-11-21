@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import productosData from "../data/productos";
+// ❌ ya no usamos productosData
+// import productosData from "../data/productos";
 import "../styles/styles.css";
 import "../styles/admin.css";
 
@@ -11,6 +12,9 @@ const categorias = [
   { id: 4, nombre: "Seguridad y Protección" },
   { id: 5, nombre: "Iluminación" }
 ];
+
+// URL base de tu backend en Render
+const API_URL = "https://backend-tienda-react.onrender.com";
 
 function Admin() {
   const navigate = useNavigate();
@@ -34,16 +38,25 @@ function Admin() {
       setAdminActivo(JSON.parse(admin));
     } else {
       navigate("/iniciar-sesion");
+      return;
     }
 
-    // Cargar productos desde localStorage o desde el archivo
-    const productosGuardados = localStorage.getItem("productosAdmin");
-    if (productosGuardados) {
-      setProductos(JSON.parse(productosGuardados));
-    } else {
-      setProductos(productosData);
-      localStorage.setItem("productosAdmin", JSON.stringify(productosData));
-    }
+    // Cargar productos desde el backend
+    const fetchProductos = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/productos`);
+        if (!res.ok) {
+          throw new Error("Error al cargar productos");
+        }
+        const data = await res.json();
+        // data debe ser un array de {id, nombre, precio, categoriaId, descripcion, imagen}
+        setProductos(data);
+      } catch (err) {
+        console.error("Error cargando productos:", err);
+      }
+    };
+
+    fetchProductos();
   }, [navigate]);
 
   // Funciones para productos
@@ -54,37 +67,67 @@ function Admin() {
     });
   };
 
-  const guardarProducto = (e) => {
+  const guardarProducto = async (e) => {
     e.preventDefault();
-    
-    let nuevosProductos;
-    if (productoEditando) {
-      // Editar producto existente
-      nuevosProductos = productos.map(p => 
-        p.id === productoEditando.id 
-          ? { ...p, ...formProducto, precio: Number(formProducto.precio), categoriaId: Number(formProducto.categoriaId) }
-          : p
-      );
-    } else {
-      // Crear nuevo producto
-      const nuevoProducto = {
-        id: productos.length > 0 ? Math.max(...productos.map(p => p.id)) + 1 : 1,
-        nombre: formProducto.nombre,
-        precio: Number(formProducto.precio),
-        categoriaId: Number(formProducto.categoriaId),
-        descripcion: formProducto.descripcion,
-        imagen: null
-      };
-      nuevosProductos = [...productos, nuevoProducto];
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Sesión expirada. Inicia sesión nuevamente.");
+      navigate("/iniciar-sesion");
+      return;
     }
 
-    setProductos(nuevosProductos);
-    localStorage.setItem("productosAdmin", JSON.stringify(nuevosProductos));
-    
-    // Resetear formulario
-    setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "" });
-    setProductoEditando(null);
-    setMostrarFormProducto(false);
+    const payload = {
+      nombre: formProducto.nombre,
+      precio: Number(formProducto.precio),
+      categoriaId: Number(formProducto.categoriaId),
+      descripcion: formProducto.descripcion,
+      imagen: null
+    };
+
+    const url = productoEditando
+      ? `${API_URL}/api/productos/${productoEditando.id}`
+      : `${API_URL}/api/productos`;
+
+    const method = productoEditando ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        throw new Error("Error al guardar producto");
+      }
+
+      const productoGuardado = await res.json();
+
+      let nuevosProductos;
+      if (productoEditando) {
+        // Reemplazar el producto editado en la lista
+        nuevosProductos = productos.map((p) =>
+          p.id === productoGuardado.id ? productoGuardado : p
+        );
+      } else {
+        // Agregar nuevo producto
+        nuevosProductos = [...productos, productoGuardado];
+      }
+
+      setProductos(nuevosProductos);
+
+      // Resetear formulario
+      setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "" });
+      setProductoEditando(null);
+      setMostrarFormProducto(false);
+    } catch (err) {
+      console.error(err);
+      alert("Ocurrió un error al guardar el producto");
+    }
   };
 
   const editarProducto = (producto) => {
@@ -98,11 +141,36 @@ function Admin() {
     setMostrarFormProducto(true);
   };
 
-  const eliminarProducto = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar este producto?")) {
-      const nuevosProductos = productos.filter(p => p.id !== id);
+  const eliminarProducto = async (id) => {
+    if (!window.confirm("¿Estás seguro de eliminar este producto?")) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Sesión expirada. Inicia sesión nuevamente.");
+      navigate("/iniciar-sesion");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/productos/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // 204 es lo normal en DELETE sin contenido
+      if (!res.ok && res.status !== 204) {
+        throw new Error("Error al eliminar producto");
+      }
+
+      const nuevosProductos = productos.filter((p) => p.id !== id);
       setProductos(nuevosProductos);
-      localStorage.setItem("productosAdmin", JSON.stringify(nuevosProductos));
+    } catch (err) {
+      console.error(err);
+      alert("Ocurrió un error al eliminar el producto");
     }
   };
 
@@ -283,7 +351,13 @@ function Admin() {
                   <div key={producto.id} className="t-row">
                     <span>{producto.id}</span>
                     <span>{producto.nombre}</span>
-                    <span>${producto.precio.toLocaleString()}</span>
+                    <span>
+                      ${
+                        typeof producto.precio === "number"
+                          ? producto.precio.toLocaleString()
+                          : producto.precio
+                      }
+                    </span>
                     <span>{categorias.find(c => c.id === producto.categoriaId)?.nombre}</span>
                     <span className="admin-table-actions">
                       <button className="btn btn-small" onClick={() => editarProducto(producto)}>
