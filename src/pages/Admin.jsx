@@ -11,15 +11,13 @@ const categorias = [
   { id: 5, nombre: "Iluminación" }
 ];
 
-// URL base de tu backend en Render
 const API_URL = "https://backend-tienda-react.onrender.com";
 
 function Admin() {
   const navigate = useNavigate();
   const [adminActivo, setAdminActivo] = useState(null);
   const [seccionActiva, setSeccionActiva] = useState("dashboard");
-  
-  // Estados para productos
+
   const [productos, setProductos] = useState([]);
   const [productoEditando, setProductoEditando] = useState(null);
   const [mostrarFormProducto, setMostrarFormProducto] = useState(false);
@@ -31,49 +29,76 @@ function Admin() {
     imagen: ""
   });
 
+  // 🔹 NUEVO: estado de usuarios
+  const [usuarios, setUsuarios] = useState([]);
+  const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
+  const [errorUsuarios, setErrorUsuarios] = useState("");
+
   useEffect(() => {
     const admin = localStorage.getItem("adminActivo");
-    if (admin) {
-      setAdminActivo(JSON.parse(admin));
-    } else {
+    if (!admin) {
       navigate("/iniciar-sesion");
       return;
     }
+    setAdminActivo(JSON.parse(admin));
 
-    // Cargar productos desde el backend
     const fetchProductos = async () => {
       try {
         const res = await fetch(`${API_URL}/api/productos`);
-        if (!res.ok) {
-          throw new Error("Error al cargar productos");
-        }
+        if (!res.ok) throw new Error("No se pudieron cargar los productos.");
         const data = await res.json();
-        // data debe ser un array de {id, nombre, precio, categoriaId, descripcion, imagen}
         setProductos(data);
       } catch (err) {
-        console.error("Error cargando productos:", err);
+        console.error("Error al cargar productos:", err);
+      }
+    };
+
+    // 🔹 NUEVO: cargar usuarios desde el backend
+    const fetchUsuarios = async () => {
+      try {
+        setCargandoUsuarios(true);
+        setErrorUsuarios("");
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.warn("No hay token, no se pueden cargar usuarios.");
+          return;
+        }
+
+        const res = await fetch(`${API_URL}/api/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error("No se pudieron cargar los usuarios.");
+        }
+
+        const data = await res.json();
+        // data: [{id, nombre, apellido, email, direccion, ...}]
+        setUsuarios(data);
+      } catch (err) {
+        console.error("Error al cargar usuarios:", err);
+        setErrorUsuarios("No se pudieron cargar los usuarios.");
+      } finally {
+        setCargandoUsuarios(false);
       }
     };
 
     fetchProductos();
+    fetchUsuarios();
   }, [navigate]);
 
-  // Funciones para productos
   const handleFormProductoChange = (e) => {
-    setFormProducto({
-      ...formProducto,
-      [e.target.name]: e.target.value
-    });
+    setFormProducto({ ...formProducto, [e.target.name]: e.target.value });
   };
 
   const guardarProducto = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem("token");
-    console.log("TOKEN EN GUARDAR PRODUCTO:", token); // DEBUG
-
     if (!token) {
-      alert("Sesión expirada. Inicia sesión nuevamente.");
+      alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
       navigate("/iniciar-sesion");
       return;
     }
@@ -89,7 +114,6 @@ function Admin() {
     const url = productoEditando
       ? `${API_URL}/api/productos/${productoEditando.id}`
       : `${API_URL}/api/productos`;
-
     const method = productoEditando ? "PUT" : "POST";
 
     try {
@@ -101,35 +125,19 @@ function Admin() {
         },
         body: JSON.stringify(payload)
       });
-
-      console.log("STATUS GUARDAR PRODUCTO:", res.status); // DEBUG
-
-      if (!res.ok) {
-        throw new Error("Error al guardar producto");
-      }
+      if (!res.ok) throw new Error("No se pudo guardar el producto.");
 
       const productoGuardado = await res.json();
-
-      let nuevosProductos;
-      if (productoEditando) {
-        // Reemplazar el producto editado en la lista
-        nuevosProductos = productos.map((p) =>
-          p.id === productoGuardado.id ? productoGuardado : p
-        );
-      } else {
-        // Agregar nuevo producto
-        nuevosProductos = [...productos, productoGuardado];
-      }
+      const nuevosProductos = productoEditando
+        ? productos.map((p) => (p.id === productoGuardado.id ? productoGuardado : p))
+        : [...productos, productoGuardado];
 
       setProductos(nuevosProductos);
-
-      // Resetear formulario
       setFormProducto({ nombre: "", precio: "", categoriaId: 1, descripcion: "", imagen: "" });
       setProductoEditando(null);
       setMostrarFormProducto(false);
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al guardar el producto");
+      alert(err.message);
     }
   };
 
@@ -146,15 +154,11 @@ function Admin() {
   };
 
   const eliminarProducto = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar este producto?")) {
-      return;
-    }
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
 
     const token = localStorage.getItem("token");
-    console.log("TOKEN EN ELIMINAR PRODUCTO:", token); // DEBUG
-
     if (!token) {
-      alert("Sesión expirada. Inicia sesión nuevamente.");
+      alert("Sesión expirada. Por favor, inicia sesión nuevamente.");
       navigate("/iniciar-sesion");
       return;
     }
@@ -162,23 +166,12 @@ function Admin() {
     try {
       const res = await fetch(`${API_URL}/api/productos/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-
-      console.log("STATUS ELIMINAR PRODUCTO:", res.status); // DEBUG
-
-      // 204 es lo normal en DELETE sin contenido
-      if (!res.ok && res.status !== 204) {
-        throw new Error("Error al eliminar producto");
-      }
-
-      const nuevosProductos = productos.filter((p) => p.id !== id);
-      setProductos(nuevosProductos);
+      if (!res.ok && res.status !== 204) throw new Error("No se pudo eliminar el producto.");
+      setProductos(productos.filter((p) => p.id !== id));
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al eliminar el producto");
+      alert(err.message);
     }
   };
 
@@ -188,58 +181,36 @@ function Admin() {
     setMostrarFormProducto(false);
   };
 
-  if (!adminActivo) {
-    return null;
-  }
+  if (!adminActivo) return null;
 
-  // Renderizado de secciones
   const renderContenido = () => {
-    switch(seccionActiva) {
+    switch (seccionActiva) {
       case "dashboard":
         return (
           <>
             <div className="admin-header">
-              <h2>Dashboard</h2>
-              <p className="sub">Vista general del sistema (en construcción).</p>
+              <h2>Panel de Control</h2>
+              <p className="sub">Gestiona tu tienda desde un solo lugar.</p>
             </div>
-
-            {/* Módulos del Dashboard solo como navegación, sin datos ficticios */}
             <div className="admin-modules-grid">
-              <div onClick={() => setSeccionActiva("dashboard")} className="admin-module-card">
-                <div className="admin-module-icon blue">📊</div>
-                <h4>Dashboard</h4>
-                <p className="sub">Visor general de las secciones del sistema</p>
-              </div>
-
-              <div onClick={() => setSeccionActiva("productos")} className="admin-module-card">
-                <div className="admin-module-icon purple">🛍️</div>
-                <h4>Productos</h4>
-                <p className="sub">Administrar inventario y detalles de productos</p>
-              </div>
-
-              <div onClick={() => setSeccionActiva("categorias")} className="admin-module-card">
-                <div className="admin-module-icon orange">📑</div>
-                <h4>Categorías</h4>
-                <p className="sub">Organizar productos en categorías</p>
-              </div>
-
-              <div onClick={() => setSeccionActiva("usuarios")} className="admin-module-card">
-                <div className="admin-module-icon blue">👥</div>
-                <h4>Usuarios</h4>
-                <p className="sub">Gestión de cuentas de usuario</p>
-              </div>
-
-              <div onClick={() => setSeccionActiva("reportes")} className="admin-module-card">
-                <div className="admin-module-icon green">📈</div>
-                <h4>Reportes</h4>
-                <p className="sub">Módulo de reportes en construcción</p>
-              </div>
-
-              <div onClick={() => setSeccionActiva("perfil")} className="admin-module-card">
-                <div className="admin-module-icon red">👤</div>
-                <h4>Perfil</h4>
-                <p className="sub">Administración de información personal</p>
-              </div>
+              {[
+                { id: "dashboard", icon: "📊", title: "Dashboard", desc: "Resumen de la tienda" },
+                { id: "productos", icon: "🛍️", title: "Productos", desc: "Inventario y gestión" },
+                { id: "categorias", icon: "📑", title: "Categorías", desc: "Clasificación de productos" },
+                { id: "usuarios", icon: "👥", title: "Usuarios", desc: "Cuentas registradas" },
+                { id: "reportes", icon: "📈", title: "Reportes", desc: "Estadísticas y ventas" },
+                { id: "perfil", icon: "👤", title: "Perfil", desc: "Información de cuenta" }
+              ].map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => setSeccionActiva(item.id)}
+                  className={`admin-module-card ${seccionActiva === item.id ? "active" : ""}`}
+                >
+                  <div className="admin-module-icon blue">{item.icon}</div>
+                  <h4>{item.title}</h4>
+                  <p className="sub">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </>
         );
@@ -250,7 +221,7 @@ function Admin() {
             <div className="admin-header-flex">
               <div>
                 <h2>Gestión de Productos</h2>
-                <p className="sub">Administra el inventario de productos</p>
+                <p className="sub">Administra tu inventario de productos</p>
               </div>
               {!mostrarFormProducto && (
                 <button className="btn btn-primario" onClick={() => setMostrarFormProducto(true)}>
@@ -271,23 +242,22 @@ function Admin() {
                       value={formProducto.nombre}
                       onChange={handleFormProductoChange}
                       required
-                      placeholder="Ej: Martillo de acero"
+                      placeholder="Ej: Taladro eléctrico"
                     />
                   </div>
-
                   <div className="campo">
-                    <label>Precio</label>
+                    <label>Precio ($)</label>
                     <input
                       type="number"
                       name="precio"
+                      min="0"
+                      step="0.01"
                       value={formProducto.precio}
                       onChange={handleFormProductoChange}
                       required
-                      placeholder="8990"
-                      min="0"
+                      placeholder="15990"
                     />
                   </div>
-
                   <div className="campo">
                     <label>Categoría</label>
                     <select
@@ -301,20 +271,18 @@ function Admin() {
                       ))}
                     </select>
                   </div>
-
                   <div className="campo">
                     <label>Descripción (opcional)</label>
                     <textarea
                       name="descripcion"
                       value={formProducto.descripcion}
                       onChange={handleFormProductoChange}
-                      placeholder="Descripción del producto"
+                      placeholder="Detalles del producto"
                       rows="3"
                     />
                   </div>
-
                   <div className="campo">
-                    <label>URL de imagen (opcional)</label>
+                    <label>URL de Imagen (opcional)</label>
                     <input
                       type="text"
                       name="imagen"
@@ -323,7 +291,6 @@ function Admin() {
                       placeholder="https://ejemplo.com/imagen.jpg"
                     />
                   </div>
-
                   <div className="admin-form-actions">
                     <button type="submit" className="btn btn-primario">
                       {productoEditando ? "Actualizar" : "Guardar"}
@@ -345,28 +312,26 @@ function Admin() {
                   <span>Categoría</span>
                   <span>Acciones</span>
                 </div>
-                {productos.map(producto => (
-                  <div key={producto.id} className="t-row">
-                    <span>{producto.id}</span>
-                    <span>{producto.nombre}</span>
-                    <span>
-                      ${
-                        typeof producto.precio === "number"
-                          ? producto.precio.toLocaleString()
-                          : producto.precio
-                      }
-                    </span>
-                    <span>{categorias.find(c => c.id === producto.categoriaId)?.nombre}</span>
-                    <span className="admin-table-actions">
-                      <button className="btn btn-small" onClick={() => editarProducto(producto)}>
-                        ✏️ Editar
-                      </button>
-                      <button className="btn btn-small btn-danger" onClick={() => eliminarProducto(producto.id)}>
-                        🗑️ Eliminar
-                      </button>
-                    </span>
-                  </div>
-                ))}
+                {productos.length === 0 ? (
+                  <div className="admin-empty-message">No hay productos registrados</div>
+                ) : (
+                  productos.map(producto => (
+                    <div key={producto.id} className="t-row">
+                      <span>{producto.id}</span>
+                      <span>{producto.nombre}</span>
+                      <span>${Number(producto.precio).toLocaleString("es-CL")}</span>
+                      <span>{categorias.find(c => c.id === producto.categoriaId)?.nombre}</span>
+                      <span className="admin-table-actions">
+                        <button className="btn btn-small" onClick={() => editarProducto(producto)}>
+                          ✏️ Editar
+                        </button>
+                        <button className="btn btn-small btn-danger" onClick={() => eliminarProducto(producto.id)}>
+                          🗑️ Eliminar
+                        </button>
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </>
@@ -377,9 +342,8 @@ function Admin() {
           <>
             <div className="admin-header">
               <h2>Categorías</h2>
-              <p className="sub">Listado de categorías de productos</p>
+              <p className="sub">Organiza tus productos en categorías</p>
             </div>
-
             <div className="admin-white-box">
               <div className="tabla">
                 <div className="t-row t-head">
@@ -400,29 +364,38 @@ function Admin() {
         );
 
       case "usuarios":
-        const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
         return (
           <>
             <div className="admin-header">
-              <h2>Gestión de Usuarios</h2>
-              <p className="sub">Listado de usuarios registrados</p>
+              <h2>Usuarios Registrados</h2>
+              <p className="sub">Listado de cuentas de usuario almacenadas en la base de datos.</p>
             </div>
-
             <div className="admin-white-box">
               <div className="tabla">
                 <div className="t-row t-head">
+                  <span>ID</span>
                   <span>Nombre</span>
                   <span>Apellido</span>
                   <span>Email</span>
                   <span>Dirección</span>
                 </div>
-                {usuarios.length === 0 ? (
-                  <div className="admin-empty-message">
-                    No hay usuarios registrados
-                  </div>
-                ) : (
-                  usuarios.map((usuario, index) => (
-                    <div key={index} className="t-row">
+
+                {cargandoUsuarios && (
+                  <div className="admin-empty-message">Cargando usuarios...</div>
+                )}
+
+                {errorUsuarios && !cargandoUsuarios && (
+                  <div className="admin-empty-message">{errorUsuarios}</div>
+                )}
+
+                {!cargandoUsuarios && !errorUsuarios && usuarios.length === 0 && (
+                  <div className="admin-empty-message">No hay usuarios registrados</div>
+                )}
+
+                {!cargandoUsuarios && !errorUsuarios && usuarios.length > 0 && (
+                  usuarios.map((usuario) => (
+                    <div key={usuario.id} className="t-row">
+                      <span>{usuario.id}</span>
                       <span>{usuario.nombre}</span>
                       <span>{usuario.apellido}</span>
                       <span>{usuario.email}</span>
@@ -437,49 +410,30 @@ function Admin() {
 
       case "reportes":
         return (
-          <>
-            <div className="admin-header">
-              <h2>Reportes de Ventas</h2>
-              <p className="sub">Módulo de reportes en construcción.</p>
-            </div>
-          </>
+          <div className="admin-header">
+            <h2>Reportes</h2>
+            <p className="sub">Este módulo está en desarrollo.</p>
+          </div>
         );
 
       case "perfil":
         return (
-          <>
-            <div className="admin-header">
-              <h2>Perfil de Administrador</h2>
-              <p className="sub">Información de la cuenta</p>
+          <div className="admin-white-box">
+            <div className="admin-profile-header">
+              <div className="admin-profile-icon">👤</div>
+              <h3>{adminActivo.nombre}</h3>
+              <p className="sub">{adminActivo.email}</p>
+              <span className="admin-badge">Administrador</span>
             </div>
-
-            <div className="admin-white-box">
-              <div className="admin-profile-header">
-                <div className="admin-profile-icon">👤</div>
-                <h3>{adminActivo.nombre}</h3>
-                <p className="sub">{adminActivo.email}</p>
-                <span className="admin-badge">Administrador</span>
-              </div>
-
-              <div className="admin-profile-content">
-                <h4>Información de la Cuenta</h4>
-                <ul>
-                  <li className="admin-profile-item">
-                    <strong>Rol:</strong> Administrador del Sistema
-                  </li>
-                  <li className="admin-profile-item">
-                    <strong>Correo:</strong> {adminActivo.email}
-                  </li>
-                  <li className="admin-profile-item">
-                    <strong>Acceso:</strong> Completo
-                  </li>
-                  <li className="admin-profile-item">
-                    <strong>Última sesión:</strong> Activa
-                  </li>
-                </ul>
-              </div>
+            <div className="admin-profile-content">
+              <h4>Detalles de la Cuenta</h4>
+              <ul>
+                <li><strong>Rol:</strong> Administrador</li>
+                <li><strong>Email:</strong> {adminActivo.email}</li>
+                <li><strong>Acceso:</strong> Completo</li>
+              </ul>
             </div>
-          </>
+          </div>
         );
 
       default:
@@ -491,51 +445,53 @@ function Admin() {
     <div className="admin-container">
       {/* Sidebar */}
       <aside className="admin-sidebar">
-        <h3>Panel Admin</h3>
-        
+        <div className="sidebar-header">
+          <h3>Panel de Administrador</h3>
+        </div>
         <nav>
-          <div 
-            onClick={() => setSeccionActiva("dashboard")}
-            className={`admin-sidebar-item ${seccionActiva === "dashboard" ? "active" : ""}`}
-          >
-            📊 Dashboard
-          </div>
-          <div 
-            onClick={() => setSeccionActiva("productos")}
-            className={`admin-sidebar-item ${seccionActiva === "productos" ? "active" : ""}`}
-          >
-            🛍️ Productos
-          </div>
-          <div 
-            onClick={() => setSeccionActiva("categorias")}
-            className={`admin-sidebar-item ${seccionActiva === "categorias" ? "active" : ""}`}
-          >
-            📑 Categorías
-          </div>
-          <div 
-            onClick={() => setSeccionActiva("usuarios")}
-            className={`admin-sidebar-item ${seccionActiva === "usuarios" ? "active" : ""}`}
-          >
-            👥 Usuarios
-          </div>
-          <div 
-            onClick={() => setSeccionActiva("reportes")}
-            className={`admin-sidebar-item ${seccionActiva === "reportes" ? "active" : ""}`}
-          >
-            📈 Reportes
-          </div>
-          <div 
-            onClick={() => setSeccionActiva("perfil")}
-            className={`admin-sidebar-item ${seccionActiva === "perfil" ? "active" : ""}`}
-          >
-            👤 Perfil
-          </div>
+          {[
+            { id: "dashboard", name: "Dashboard", icon: "📊" },
+            { id: "productos", name: "Productos", icon: "🛍️" },
+            { id: "categorias", name: "Categorías", icon: "📑" },
+            { id: "usuarios", name: "Usuarios", icon: "👥" },
+            { id: "reportes", name: "Reportes", icon: "📈" },
+            { id: "perfil", name: "Perfil", icon: "👤" }
+          ].map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setSeccionActiva(item.id)}
+              className={`admin-sidebar-item ${seccionActiva === item.id ? "active" : ""}`}
+            >
+              <span className="icon">{item.icon}</span>
+              <span className="text">{item.name}</span>
+            </div>
+          ))}
         </nav>
       </aside>
 
       {/* Main Content */}
       <main className="admin-main">
-        {renderContenido()}
+        <header className="admin-top-bar">
+          <div className="user-info">
+            <span className="greeting">Hola, {adminActivo.email}</span>
+          </div>
+          <div className="actions">
+            <button
+              className="btn btn-logout"
+              onClick={() => {
+                localStorage.removeItem("adminActivo");
+                localStorage.removeItem("token");
+                navigate("/iniciar-sesion");
+              }}
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </header>
+
+        <div className="admin-content">
+          {renderContenido()}
+        </div>
       </main>
     </div>
   );
