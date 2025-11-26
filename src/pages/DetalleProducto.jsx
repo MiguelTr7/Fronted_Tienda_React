@@ -1,25 +1,38 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import productos from "../data/productos";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "../styles/detalleproducto.css";
 
 function DetalleProducto({ onAgregar }) {
-  const { id } = useParams(); // obtiene el ID desde la URL
-  const producto = productos.find((item) => item.id === parseInt(id));
+  const { id } = useParams();
+  const [producto, setProducto] = useState(null);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  // Si no se encuentra el producto
-  if (!producto) {
+  useEffect(() => {
+    fetch(`https://backend-tienda-react.onrender.com/api/productos/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Producto no encontrado");
+        return res.json();
+      })
+      .then((data) => setProducto(data))
+      .catch((err) => setError(err.message));
+  }, [id]);
+
+  if (error) {
     return (
       <main>
         <section className="seccion-titulo">
-          <h2>Producto no encontrado</h2>
-          <p className="sub">El artículo que buscas no está disponible.</p>
+          <h2>Error</h2>
+          <p className="sub">{error}</p>
         </section>
       </main>
     );
   }
 
-  // Función para agregar al carrito
+  if (!producto) {
+    return <p className="cargando">Cargando...</p>;
+  }
+
   const handleAddToCart = () => {
     onAgregar({ ...producto, cantidad: 1 });
   };
@@ -40,18 +53,10 @@ function DetalleProducto({ onAgregar }) {
           <h3>{producto.nombre}</h3>
           <p className="precio-detalle">${producto.precio.toLocaleString("es-CL")}</p>
 
-          <p className="descripcion">
-            Este producto está fabricado con materiales de alta calidad, ideal
-            para profesionales y entusiastas del bricolaje. Garantía de 1 año
-            por defectos de fábrica.
-          </p>
+          <p className="descripcion">{producto.descripcion}</p>
 
           <div className="acciones">
-            {/* Botón de añadir al carrito */}
-            <button
-              className="btn btn-primario"
-              onClick={handleAddToCart}
-            >
+            <button className="btn btn-primario" onClick={handleAddToCart}>
               Añadir al carrito
             </button>
             <a href="/productos" className="btn btn-secundario_detalle">
